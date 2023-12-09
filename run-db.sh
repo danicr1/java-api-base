@@ -9,21 +9,26 @@ show_help()
     echo "Syntax: run [option]"
     echo
     echo "options:"
-    echo "--build | -b     Build the project using mvn clean install."
-    echo "--local | -l     Launch the embbeded tomcat included in Spring Boot."
-    echo "--package | -p   Generate JAR."
+    echo "--create | -c    Creates a new mysql container and network."
+    echo "--remove | -r    Removes the exisitng mysql container and network."
+    echo "--clean | -c     Remove existing containers and networks and create new ones."
+    echo "--start| -s      Launch a previously stopped container."
+    echo "--stop | -t      Stop a running mysql container."
+    echo "--client | -x    Connect to a running mysql instance using command line client."
     echo "--help | -h      Print this help."
     echo
 }
 
 create_mysql_container()
 {
+    echo "Creating mysql network and container..."
     docker network create $docker_network_name
-    docker run --name $docker_container_name -e MYSQL_ROOT_PASSWORD=$mysql_root_password -d mysql:$mysql_docker_tag
+    docker run --name $docker_container_name --network $docker_network_name -e MYSQL_ROOT_PASSWORD="$mysql_root_password" -d $mysql_docker_image:$mysql_docker_tag
 }
 
 remove_mysql_container()
 {
+    echo "Removing mysql network and container..."
     docker stop $docker_container_name
     docker network rm $docker_network_name
     docker rm $docker_container_name
@@ -32,8 +37,10 @@ remove_mysql_container()
 docker_network_name="db-network"
 docker_container_name="db-mysql"
 
+mysql_docker_image="mysql"
 mysql_docker_tag="8.2.0"
 
+mysql_root_user="root"
 mysql_root_password="testpass"
 
 # Process options
@@ -62,6 +69,11 @@ while :; do
             ;;
         -t|--stop)
             docker stop $docker_container_name
+            exit
+            ;;
+        -x|--client)
+            echo "Launching mysql command line client..."
+            docker run -it --network $docker_network_name --rm $mysql_docker_image:$mysql_docker_tag mysql --host="$docker_container_name" --user="$mysql_root_user" --password="$mysql_root_password"
             exit
             ;;
         -?*)
