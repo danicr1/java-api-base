@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+   db:
+     image: mysql:8.2.0
+     volumes:
+       - /opt/mysqltest:/var/lib/mysql
+     environment:
+       MYSQL_ROOT_PASSWORD: rootpass
+     ports:
+       - 3306:3306
+web:
+    depends_on:
+      - db
+    image: tomcat
+    volumes:
+      - ./target/LoginWebApp-1.war:/usr/local/tomcat/webapps/LoginWebApp-1.war
+    ports:
+      - '8082:8080'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb1
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: root

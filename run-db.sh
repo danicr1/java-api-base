@@ -65,7 +65,7 @@ mysql_docker_image="mysql"
 mysql_docker_tag="8.2.0"
 
 mysql_root_user="root"
-mysql_root_password="testpass"
+mysql_root_password="rootpass"
 mysql_default_db="mysql"
 
 sql_initial_migration_path="./src/main/resources/migration/"
