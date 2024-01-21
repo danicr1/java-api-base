@@ -33,3 +33,7 @@ mvnw.cmd
 
 # vscode settings
 .vscode
+
+# intellij settings
+.idea
+*.iml
