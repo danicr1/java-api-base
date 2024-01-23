@@ -1,0 +1,26 @@
+# Build context must be project's root because only files that are in it can be ADDed or COPYed.
+# This context is the base of 'dockerfile' property path and ALL PATHS STATED IN THE DOCKERFILE.
+# For some reason looks like path relative to Dockerfiles's location works too??? Two "base" paths at the same time???
+
+version: '3.8'
+services:
+  db:
+    image: mysql:8.2.0
+    volumes:
+      - /tmp/mysqltest:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: db_example
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: password1234
+    ports:
+      - "3306:3306"
+  web:
+      depends_on:
+        - db
+      image: example/mytestapi:0.0.1
+      build:
+        context: ../ # Project root
+        dockerfile: ./docker/web/Dockerfile
+      ports:
+        - "8082:8080"
