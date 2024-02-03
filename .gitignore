@@ -26,11 +26,6 @@ replay_pid*
 # Target
 target/
 
-# Maven wrapper
-mvnw
-mvnw.cmd
-.mvn
-
 # vscode settings
 .vscode
 
